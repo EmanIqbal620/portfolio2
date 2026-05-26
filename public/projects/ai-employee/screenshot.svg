@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" fill="none">
+  <rect width="1536" height="1024" fill="#0a0a0f"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1536" y2="1024">
+      <stop offset="0%" stop-color="#1a0533"/>
+      <stop offset="50%" stop-color="#0a0a1a"/>
+      <stop offset="100%" stop-color="#050510"/>
+    </linearGradient>
+    <linearGradient id="glow1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D946EF" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#D946EF" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glow2" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A855F7" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#A855F7" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1536" height="1024" fill="url(#bg)"/>
+  <circle cx="200" cy="200" r="300" fill="url(#glow1)"/>
+  <circle cx="1300" cy="800" r="350" fill="url(#glow2)"/>
+
+  <!-- Top bar -->
+  <rect x="0" y="0" width="1536" height="52" fill="#12121a" stroke="#ffffff10" stroke-width="1"/>
+  <rect x="24" y="16" width="12" height="12" rx="6" fill="#D946EF"/>
+  <rect x="44" y="16" width="12" height="12" rx="6" fill="#2DD4BF" opacity="0.5"/>
+  <rect x="64" y="16" width="12" height="12" rx="6" fill="#A855F7" opacity="0.5"/>
+  <text x="100" y="34" fill="#ffffff" font-size="14" font-family="monospace" font-weight="600" opacity="0.9">AI EMPLOYEE DASHBOARD</text>
+  <text x="1400" y="34" fill="#D946EF" font-size="12" font-family="monospace" opacity="0.8">● ACTIVE</text>
+
+  <!-- Sidebar -->
+  <rect x="0" y="52" width="220" height="972" fill="#0e0e16" stroke="#ffffff08" stroke-width="1"/>
+  <rect x="16" y="80" width="188" height="36" rx="8" fill="#ffffff08"/>
+  <text x="28" y="103" fill="#ffffff" font-size="13" font-family="sans-serif" opacity="0.6">Dashboard</text>
+  <rect x="16" y="124" width="188" height="36" rx="8" fill="#D946EF12" stroke="#D946EF30" stroke-width="1"/>
+  <text x="28" y="147" fill="#D946EF" font-size="13" font-family="sans-serif" font-weight="600">Agents</text>
+  <rect x="16" y="168" width="188" height="36" rx="8" fill="#ffffff08"/>
+  <text x="28" y="191" fill="#ffffff" font-size="13" font-family="sans-serif" opacity="0.6">File Watchers</text>
+  <rect x="16" y="212" width="188" height="36" rx="8" fill="#ffffff08"/>
+  <text x="28" y="235" fill="#ffffff" font-size="13" font-family="sans-serif" opacity="0.6">MCP Servers</text>
+  <rect x="16" y="256" width="188" height="36" rx="8" fill="#ffffff08"/>
+  <text x="28" y="279" fill="#ffffff" font-size="13" font-family="sans-serif" opacity="0.6">Execution Logs</text>
+  <rect x="16" y="300" width="188" height="36" rx="8" fill="#ffffff08"/>
+  <text x="28" y="323" fill="#ffffff" font-size="13" font-family="sans-serif" opacity="0.6">Settings</text>
+
+  <!-- Status card -->
+  <rect x="252" y="80" width="420" height="180" rx="16" fill="#12121a" stroke="#ffffff08" stroke-width="1"/>
+  <rect x="276" y="104" width="40" height="40" rx="10" fill="#D946EF20"/>
+  <text x="283" y="131" fill="#D946EF" font-size="20" font-family="sans-serif">⚡</text>
+  <text x="332" y="118" fill="#ffffff" font-size="16" font-family="sans-serif" font-weight="600" opacity="0.9">Agent Status</text>
+  <text x="332" y="136" fill="#2DD4BF" font-size="12" font-family="monospace" opacity="0.9">● Running 24/7 — Zero Input Required</text>
+  <rect x="276" y="160" width="172" height="24" rx="12" fill="#2DD4BF12"/>
+  <text x="286" y="177" fill="#2DD4BF" font-size="11" font-family="monospace">Uptime: 14d 6h 32m</text>
+  <rect x="460" y="160" width="172" height="24" rx="12" fill="#D946EF12"/>
+  <text x="470" y="177" fill="#D946EF" font-size="11" font-family="monospace">Tasks Auto-Completed: 847</text>
+  <rect x="276" y="196" width="368" height="36" rx="10" fill="#ffffff04"/>
+  <text x="290" y="219" fill="#ffffff" font-size="12" font-family="monospace" opacity="0.5">→ Last Action: Processed 14 emails, updated 3 CRM records, posted 2 reports</text>
+
+  <!-- Activity feed -->
+  <rect x="252" y="280" width="420" height="300" rx="16" fill="#12121a" stroke="#ffffff08" stroke-width="1"/>
+  <rect x="276" y="304" width="40" height="40" rx="10" fill="#A855F720"/>
+  <text x="283" y="331" fill="#A855F7" font-size="20" font-family="sans-serif">📊</text>
+  <text x="332" y="318" fill="#ffffff" font-size="16" font-family="sans-serif" font-weight="600" opacity="0.9">Activity Log</text>
+  <text x="332" y="336" fill="#ffffff" font-size="11" font-family="sans-serif" opacity="0.4">Real-time agent execution feed</text>
+
+  <!-- Log entries -->
+  <rect x="276" y="360" width="372" height="32" rx="8" fill="#ffffff04"/>
+  <circle cx="290" cy="376" r="4" fill="#2DD4BF"/>
+  <text x="304" y="380" fill="#ffffff" font-size="11" font-family="monospace" opacity="0.7">[09:42:13] File watcher detected change: invoices/report-04.xlsx</text>
+
+  <rect x="276" y="400" width="372" height="32" rx="8" fill="#ffffff04"/>
+  <circle cx="290" cy="416" r="4" fill="#D946EF"/>
+  <text x="304" y="420" fill="#ffffff" font-size="11" font-family="monospace" opacity="0.7">[09:42:11] MCP Server processed → Slack notification sent</text>
+
+  <rect x="276" y="440" width="372" height="32" rx="8" fill="#ffffff04"/>
+  <circle cx="290" cy="456" r="4" fill="#A855F7"/>
+  <text x="304" y="460" fill="#ffffff" font-size="11" font-family="monospace" opacity="0.7">[09:40:05] Claude Code: Reasoning cycle complete — decision logged</text>
+
+  <rect x="276" y="480" width="372" height="32" rx="8" fill="#ffffff04"/>
+  <circle cx="290" cy="496" r="4" fill="#2DD4BF"/>
+  <text x="304" y="500" fill="#ffffff" font-size="11" font-family="monospace" opacity="0.7">[09:35:22] Email response drafted + sent to client@acme.co</text>
+
+  <rect x="276" y="520" width="372" height="32" rx="8" fill="#ffffff04"/>
+  <circle cx="290" cy="536" r="4" fill="#2DD4BF"/>
+  <text x="304" y="540" fill="#ffffff" font-size="11" font-family="monospace" opacity="0.7">[09:30:00] Daily report generated — 0 human inputs required</text>
+
+  <!-- Right panel: MCP Topology -->
+  <rect x="700" y="80" width="580" height="500" rx="16" fill="#12121a" stroke="#ffffff08" stroke-width="1"/>
+  <rect x="724" y="104" width="40" height="40" rx="10" fill="#2DD4BF20"/>
+  <text x="731" y="131" fill="#2DD4BF" font-size="20" font-family="sans-serif">🔗</text>
+  <text x="780" y="118" fill="#ffffff" font-size="16" font-family="sans-serif" font-weight="600" opacity="0.9">MCP Server Topology</text>
+  <text x="780" y="136" fill="#ffffff" font-size="11" font-family="sans-serif" opacity="0.4">Connected services and data flow</text>
+
+  <!-- Topology nodes -->
+  <rect x="840" y="170" width="160" height="48" rx="12" fill="#D946EF15" stroke="#D946EF30" stroke-width="1"/>
+  <text x="860" y="198" fill="#D946EF" font-size="13" font-family="monospace" font-weight="600">Claude Code</text>
+
+  <rect x="1040" y="170" width="160" height="48" rx="12" fill="#2DD4BF15" stroke="#2DD4BF30" stroke-width="1"/>
+  <text x="1060" y="198" fill="#2DD4BF" font-size="13" font-family="monospace" font-weight="600">File Watchers</text>
+
+  <rect x="920" y="260" width="160" height="48" rx="12" fill="#A855F715" stroke="#A855F730" stroke-width="1"/>
+  <text x="940" y="288" fill="#A855F7" font-size="13" font-family="monospace" font-weight="600">MCP Servers</text>
+
+  <rect x="760" y="350" width="160" height="48" rx="12" fill="#ffffff10" stroke="#ffffff20" stroke-width="1"/>
+  <text x="780" y="378" fill="#ffffff" font-size="13" font-family="monospace" font-weight="600" opacity="0.7">Obsidian GUI</text>
+
+  <rect x="1060" y="350" width="160" height="48" rx="12" fill="#ffffff10" stroke="#ffffff20" stroke-width="1"/>
+  <text x="1080" y="378" fill="#ffffff" font-size="13" font-family="monospace" font-weight="600" opacity="0.7">Python Watchers</text>
+
+  <!-- Connection lines -->
+  <line x1="920" y1="218" x2="920" y2="260" stroke="#D946EF30" stroke-width="1.5"/>
+  <line x1="1080" y1="218" x2="1000" y2="260" stroke="#2DD4BF30" stroke-width="1.5"/>
+  <line x1="920" y1="308" x2="840" y2="350" stroke="#A855F730" stroke-width="1.5"/>
+  <line x1="1000" y1="308" x2="1100" y2="350" stroke="#A855F730" stroke-width="1.5"/>
+
+  <!-- Bottom: Execution stats -->
+  <rect x="252" y="600" width="1028" height="160" rx="16" fill="#12121a" stroke="#ffffff08" stroke-width="1"/>
+  <rect x="276" y="624" width="40" height="40" rx="10" fill="#D946EF20"/>
+  <text x="283" y="651" fill="#D946EF" font-size="20" font-family="sans-serif">📈</text>
+  <text x="332" y="638" fill="#ffffff" font-size="16" font-family="sans-serif" font-weight="600" opacity="0.9">24h Execution Metrics</text>
+  <text x="332" y="656" fill="#ffffff" font-size="11" font-family="sans-serif" opacity="0.4">Self-iterating — no prompts needed</text>
+
+  <!-- Stat bars -->
+  <rect x="276" y="680" width="180" height="8" rx="4" fill="#ffffff08"/>
+  <rect x="276" y="680" width="162" height="8" rx="4" fill="#D946EF"/>
+  <text x="276" y="706" fill="#D946EF" font-size="12" font-family="monospace">Automation Rate: 90%</text>
+
+  <rect x="566" y="680" width="180" height="8" rx="4" fill="#ffffff08"/>
+  <rect x="566" y="680" width="171" height="8" rx="4" fill="#2DD4BF"/>
+  <text x="566" y="706" fill="#2DD4BF" font-size="12" font-family="monospace">Tasks Completed: 95%</text>
+
+  <rect x="856" y="680" width="180" height="8" rx="4" fill="#ffffff08"/>
+  <rect x="856" y="680" width="144" height="8" rx="4" fill="#A855F7"/>
+  <text x="856" y="706" fill="#A855F7" font-size="12" font-family="monospace">Uptime: 100%</text>
+
+  <!-- Bottom terminal -->
+  <rect x="252" y="780" width="1028" height="140" rx="12" fill="#050510" stroke="#ffffff06" stroke-width="1"/>
+  <text x="276" y="808" fill="#ffffff" font-size="11" font-family="monospace" opacity="0.4">$ ./ai-employee status —last 24h</text>
+  <text x="276" y="830" fill="#2DD4BF" font-size="12" font-family="monospace">✓ Agent running 24/7 | Zero human inputs required</text>
+  <text x="276" y="854" fill="#D946EF" font-size="12" font-family="monospace">⟩ 847 tasks auto-completed | 14 emails | 3 CRM updates</text>
+  <text x="276" y="878" fill="#ffffff" font-size="12" font-family="monospace" opacity="0.6">⟩ Self-iterating execution loops — fully autonomous mode</text>
+  <text x="276" y="902" fill="#A855F7" font-size="12" font-family="monospace">⟩ Next cycle: 09:45:00 | File watchers: ACTIVE</text>
+</svg>
