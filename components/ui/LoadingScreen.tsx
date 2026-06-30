@@ -3,12 +3,12 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const MIN_DISPLAY_MS = 1800;
+const STORAGE_KEY = 'portfolio-loaded-v2';
 
 export function LoadingScreen() {
   const [isLoading, setIsLoading] = useState(() => {
-    if (typeof window !== 'undefined' && sessionStorage.getItem('portfolio-loaded')) {
-      return false;
+    if (typeof window !== 'undefined') {
+      if (sessionStorage.getItem(STORAGE_KEY)) return false;
     }
     return true;
   });
@@ -20,11 +20,16 @@ export function LoadingScreen() {
       id: i,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 100}%`,
-      color: i % 2 === 0 ? '#D946EF' : '#2DD4BF',
+      color: '#9463c2',
       duration: 2 + Math.random() * 2,
       delay: Math.random() * 2,
     })),
   []);
+
+  useEffect(() => {
+    const splash = document.getElementById('init-splash');
+    if (splash) splash.classList.add('hidden');
+  }, []);
 
   useEffect(() => {
     if (!isLoading) return;
@@ -33,25 +38,21 @@ export function LoadingScreen() {
 
     const tick = () => {
       const elapsed = performance.now() - startedAt.current;
-      const pct = Math.min(elapsed / MIN_DISPLAY_MS, 1);
+      const pct = Math.min(elapsed / 400, 1);
       setProgress(pct);
       if (pct < 1) requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
 
     const onLoad = () => {
-      const elapsed = performance.now() - startedAt.current;
-      const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
-
       setStage('ready');
-
       setTimeout(() => {
         setProgress(1);
         setTimeout(() => {
-          sessionStorage.setItem('portfolio-loaded', '1');
+          try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch {}
           setIsLoading(false);
-        }, 300);
-      }, remaining);
+        }, 150);
+      }, 100);
     };
 
     if (document.readyState === 'complete') {
@@ -69,10 +70,10 @@ export function LoadingScreen() {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.6, ease: 'easeInOut' }}
-          className="loading-screen fixed inset-0 z-[99999] flex items-center justify-center"
+          transition={{ duration: 0.4, ease: 'easeInOut' }}
+          className="fixed inset-0 z-[99999] flex items-center justify-center"
           style={{
-            background: 'linear-gradient(135deg, #030014 0%, #0a0520 50%, #030014 100%)',
+            background: '#000',
           }}
         >
           <div className="absolute inset-0 overflow-hidden">
@@ -106,11 +107,11 @@ export function LoadingScreen() {
               transition={{ duration: 0.8, ease: 'easeOut' }}
               className="mb-8"
             >
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-black">
-                <span className="gradient-text">EMAN</span>
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-black">
+                <span className="text-white">EMAN</span>
                 <span className="text-white/90"> IQBAL</span>
               </h1>
-              <p className="text-xs md:text-sm text-white/40 mt-2 tracking-widest uppercase">
+              <p className="text-sm md:text-base text-white/40 mt-2 tracking-widest uppercase">
                 Agentic AI Developer
               </p>
             </motion.div>
@@ -125,7 +126,7 @@ export function LoadingScreen() {
                 <motion.div
                   className="h-full rounded-full"
                   style={{
-                    background: 'linear-gradient(90deg, #D946EF, #2DD4BF, #A855F7)',
+                    background: 'linear-gradient(90deg, #9463c2, #9463c2, #9463c2)',
                     width: `${progress * 100}%`,
                   }}
                   transition={{ duration: 0.1 }}

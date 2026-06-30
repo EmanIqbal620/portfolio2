@@ -111,7 +111,7 @@ function Model({ mouse }: { mouse: { x: number; y: number } }) {
       </mesh>
       <mesh ref={glowRef} position={[0, -0.2, 0]}>
         <sphereGeometry args={[2.2, 32, 32]} />
-        <meshBasicMaterial color="#2DD4BF" transparent opacity={0.02} side={THREE.BackSide} />
+        <meshBasicMaterial color="#9463c2" transparent opacity={0.02} side={THREE.BackSide} />
       </mesh>
       <group ref={modelRef}>
         <primitive object={scene} scale={1.4} />
@@ -141,12 +141,12 @@ export function Astronaut() {
       >
         <ambientLight intensity={0.4} />
         <directionalLight position={[5, 5, 5]} intensity={1.5} color="#ffffff" />
-        <directionalLight position={[-4, 3, 4]} intensity={0.8} color="#2DD4BF" />
-        <directionalLight position={[4, -3, 4]} intensity={0.5} color="#D946EF" />
-        <directionalLight position={[0, 0.5, -3]} intensity={1.0} color="#2DD4BF" />
+        <directionalLight position={[-4, 3, 4]} intensity={0.8} color="#9463c2" />
+        <directionalLight position={[4, -3, 4]} intensity={0.5} color="#9463c2" />
+        <directionalLight position={[0, 0.5, -3]} intensity={1.0} color="#9463c2" />
         <pointLight position={[0, 4, 3]} intensity={0.6} color="#ffffff" />
         <pointLight position={[0, -4, 3]} intensity={0.3} color="#4a9eff" />
-        <hemisphereLight args={['#2DD4BF', '#0a0a1a', 0.3]} />
+        <hemisphereLight args={['#9463c2', '#0a0a1a', 0.3]} />
         <AstronautSuit mouse={{ x: 0, y: 0 }} />
       </Canvas>
     </div>

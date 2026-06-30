@@ -2,7 +2,8 @@
 
 import { useRef, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Github, Linkedin, ArrowRight, ChevronDown, X } from 'lucide-react';
+import { motion, useMotionValue, useTransform, useReducedMotion } from 'framer-motion';
+import { Github, Linkedin, Mail, ArrowUpRight, Download } from 'lucide-react';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 
 const BackgroundScene = dynamic(
@@ -10,235 +11,264 @@ const BackgroundScene = dynamic(
   { ssr: false, loading: () => <div className="w-full h-full bg-transparent" /> }
 );
 
-const AstronautScene = dynamic(
-  () => import('@/components/3d/HeroScene3D').then((m) => ({ default: m.AstronautScene })),
-  { ssr: false, loading: () => <div className="w-full h-full flex items-center justify-center"><div className="w-12 h-12 rounded-full border border-white/10 loader" /></div> }
-);
-
 type MouseRef = { x: number; y: number; tx: number; ty: number };
 
-function SplitReveal({ text, className, delay = 0 }: { text: string; className?: string; delay?: number }) {
-  const chars = text.split('');
-  return (
-    <span className={className}>
-      {chars.map((char, i) => (
-        <span
-          key={i}
-          className="split-char inline-block"
-          style={{ '--reveal-delay': `${delay + i * 0.035}s` } as React.CSSProperties}
-        >
-          {char === ' ' ? '\u00A0' : char}
-        </span>
-      ))}
-    </span>
-  );
-}
+const socialLinks = [
+  { href: 'https://github.com/EmanIqbal620', icon: Github, label: 'GitHub' },
+  { href: 'https://linkedin.com/in/eman-iqbal-4954a7395', icon: Linkedin, label: 'LinkedIn' },
+  { href: 'https://x.com/emaniqbal620', icon: null, label: 'X' },
+  { href: 'mailto:emaniqbal907@gmail.com', icon: Mail, label: 'Email' },
+];
 
 export function HeroSection() {
   const mouseRef = useRef<MouseRef>({ x: 0, y: 0, tx: 0, ty: 0 });
-  const cursorRef = useRef({ cx: -1000, cy: -1000 });
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const sceneRef = useRef<HTMLDivElement>(null);
-  const [sceneInView, setSceneInView] = useState(false);
+  const [hoveredSocial, setHoveredSocial] = useState<string | null>(null);
+  const prefersReduced = useReducedMotion();
+  const mouseX = useMotionValue(0.5);
+  const mouseY = useMotionValue(0.5);
+  const glowBg = useTransform([mouseX, mouseY], ([x, y]) =>
+    `radial-gradient(600px at ${(x as number) * 100}% ${(y as number) * 100}%, rgba(148,99,194,0.1), transparent 60%)`
+  );
 
   useEffect(() => {
     const onMouse = (e: MouseEvent) => {
-      cursorRef.current.cx = e.clientX;
-      cursorRef.current.cy = e.clientY;
       const x = (e.clientX / window.innerWidth) * 2 - 1;
       const y = -(e.clientY / window.innerHeight) * 2 + 1;
       mouseRef.current.x = x;
       mouseRef.current.y = y;
+      mouseX.set(e.clientX / window.innerWidth);
+      mouseY.set(e.clientY / window.innerHeight);
     };
     window.addEventListener('mousemove', onMouse, { passive: true });
     return () => window.removeEventListener('mousemove', onMouse);
-  }, []);
-
-  useEffect(() => {
-    const el = sceneRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setSceneInView(true); obs.disconnect(); } },
-      { threshold: 0.1 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const el = titleRef.current;
-    if (!el) return;
-    const threshold = 120;
-    let rafId: number;
-    const update = () => {
-      const { tx, ty } = mouseRef.current;
-      el.style.transform = `translate(${tx * 4}px, ${ty * 3}px)`;
-      const { cx, cy } = cursorRef.current;
-      const chars = el.querySelectorAll('.split-char');
-      for (let i = 0; i < chars.length; i++) {
-        const char = chars[i] as HTMLElement;
-        const rect = char.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const dx = cx - centerX;
-        const dy = cy - centerY;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < threshold) {
-          const t = 1 - dist / threshold;
-          const smooth = t * t * (3 - 2 * t);
-          char.style.filter = `brightness(${1 + smooth * 0.4})`;
-          char.style.textShadow = `0 0 ${8 + smooth * 22}px rgba(45,212,191,${0.15 + smooth * 0.45})`;
-        } else {
-          char.style.filter = '';
-          char.style.textShadow = '';
-        }
-      }
-      rafId = requestAnimationFrame(update);
-    };
-    rafId = requestAnimationFrame(update);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
+  }, [mouseX, mouseY]);
 
   return (
-    <section id="home" className="relative min-h-screen">
-        <div className="fixed inset-0 z-0 pointer-events-none">
-          <ErrorBoundary>
-            <BackgroundScene mouse={mouseRef.current} />
-          </ErrorBoundary>
-        </div>
+    <section id="home" className="relative h-dvh lg:h-screen overflow-hidden">
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <ErrorBoundary>
+          <BackgroundScene mouse={mouseRef.current} />
+        </ErrorBoundary>
+      </div>
 
-      <div className="relative z-10 px-4 sm:px-6 lg:px-12 xl:px-20 pt-24 pb-8">
-        <div className="max-w-[1400px] mx-auto w-full min-h-[calc(100vh-10rem)] grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
-          
-            <div className="space-y-4 sm:space-y-5 order-2 md:order-1 text-center md:text-left max-w-xl lg:max-w-2xl xl:max-w-3xl">
-            <div>
-              <div className="inline-flex items-center gap-1.5 mb-6 px-3 py-1 rounded-full bg-[#2DD4BF]/10 border border-[#2DD4BF]/40">
-                <span className="text-[10px] sm:text-[11px] font-bold tracking-wide text-[#2DD4BF]">OPEN FOR INTERN/REMOTE ROLES</span>
-                <span className="w-1 h-1 rounded-full bg-[#2DD4BF] shadow-[0_0_4px_rgba(45,212,191,0.5)] animate-pulse ml-1.5" />
-              </div>
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-white/90">
-                Hi, I'm{' '}
-                <span className="font-black text-[#2DD4BF] tracking-[0.02em]">EMAN IQBAL</span>
-                <span className="text-[#2DD4BF]/60">.</span>
-              </h2>
-            </div>
+      {!prefersReduced && (
+        <motion.div
+          className="fixed inset-0 z-[1] pointer-events-none"
+          style={{ background: glowBg }}
+        />
+      )}
 
-            <div>
-              <h1 ref={titleRef} className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-4xl 2xl:text-5xl font-extrabold leading-[1.15] tracking-wide will-change-transform" style={{ transition: 'transform 0.3s ease-out' }}>
-                <span className="text-white/90 md:whitespace-nowrap">
-                    <SplitReveal text="FULLSTACK DEVELOPER" delay={0.2} />
-                </span>
-                <br />
-                <span className="inline-flex items-center gap-2 text-[#2DD4BF]" style={{ textShadow: '0 0 14px rgba(45,212,191,0.2)' }}>
-                  <span className="text-[0.5em] align-middle text-white/30 font-light">{'&'}</span>
-                  <span className="md:whitespace-nowrap">
-                    <SplitReveal text="AGENTIC AI DEVELOPER" delay={0.6} />
-                  </span>
-                </span>
-              </h1>
-            </div>
+      {/* Fade gradient at bottom — smooth bridge to next section */}
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-b from-transparent to-[#08080c] z-20 pointer-events-none" />
 
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              {[
-                { label: 'OpenAI Agents SDK', highlight: true },
-                { label: 'MCP', highlight: true },
-                { label: 'RAG', highlight: true },
-                { label: 'FastAPI', highlight: false },
-                { label: 'Docker', highlight: false },
-                { label: 'Next.js', highlight: false },
-              ].map(({ label, highlight }) => (
-                <span key={label} className={`px-3 py-1 rounded-full text-[11px] sm:text-[12px] font-semibold tracking-wide transition-all duration-300 ${
-                  highlight
-                    ? 'bg-[#2DD4BF]/10 border border-[#2DD4BF]/40 text-[#2DD4BF] shadow-[0_0_12px_rgba(45,212,191,0.15)] hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] hover:-translate-y-0.5'
-                    : 'bg-white/[0.06] border border-white/[0.12] text-white/70 hover:bg-white/[0.1] hover:border-white/30 hover:text-white/90 hover:-translate-y-0.5'
-                }`}>
-                  {label}
-                </span>
-              ))}
-            </div>
-
-            <div>
-              <p className="text-sm sm:text-base text-white/60 leading-relaxed max-w-xl mx-auto md:mx-0">
-                <span className="text-white/80 font-semibold">I build autonomous AI systems, fullstack web apps and  AI employees that work 24/7  trained on human behavior through Sociology, to build AI that actually understands the humans using it.</span>
-              </p>
-            </div>
-
-            <div className="flex flex-row flex-wrap items-center gap-3">
-              <a
-                href="#contact"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#2DD4BF] text-sm font-bold text-gray-900 tracking-wide uppercase transition-all duration-300 hover:bg-[#2DD4BF]/90 hover:shadow-[0_0_25px_rgba(45,212,191,0.4)] hover:-translate-y-1 active:translate-y-0"
-              >
-                GET IN TOUCH
-                <ArrowRight className="w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110" />
-              </a>
-              <a
-                href="#work"
-                className="group inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-white/25 bg-transparent text-sm font-bold text-white/50 tracking-wide uppercase transition-all duration-300 hover:bg-white/[0.04] hover:border-white/50 hover:text-white/80 hover:-translate-y-1 active:translate-y-0"
-              >
-                VIEW MY WORK
-              </a>
-            </div>
-
-            <div className="inline-flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="text-sm tracking-wide group/stat transition-all duration-300 hover:scale-[1.02]"><span className="text-base font-bold text-[#2DD4BF]">5+</span><span className="text-white/50 ml-1.5">Projects</span></span>
-              <span className="text-white/20 text-sm">|</span>
-              <span className="text-sm tracking-wide group/stat transition-all duration-300 hover:scale-[1.02]"><span className="text-base font-bold text-[#2DD4BF]">2</span><span className="text-white/50 ml-1.5">AI Employees 24/7</span></span>
-              <span className="text-white/20 text-sm">|</span>
-              <span className="text-sm tracking-wide group/stat transition-all duration-300 hover:scale-[1.02]"><span className="text-base font-bold text-[#2DD4BF]">Docker + MCP</span></span>
-              <span className="text-white/20 text-sm">|</span>
-              <span className="text-sm text-white/50 tracking-wide group/stat transition-all duration-300 hover:scale-[1.02]">Sociology × AI</span>
-            </div>
-
-            <div className="flex flex-row items-center gap-4 mt-3 mb-2">
-              <div className="flex items-center gap-3">
-                {[
-                  { href: 'https://github.com/EmanIqbal620', icon: Github, title: 'GitHub', delay: 0 },
-                  { href: 'https://linkedin.com/in/eman-iqbal-4954a7395', icon: Linkedin, title: 'LinkedIn', delay: 200 },
-                  { href: 'https://x.com/EmanIqbal90', icon: X, title: 'X', delay: 300 },
-                ].map(({ href, icon: Icon, title, delay }) => (
-                  <a
-                    key={title}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title={title}
-                    className="group w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white/50 transition-all duration-300 hover:bg-[#2DD4BF]/20 hover:border-[#2DD4BF]/40 hover:text-[#2DD4BF] hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(45,212,191,0.2)]"
-                  >
-                    <Icon className="w-4 h-4 transition-all duration-300 group-hover:scale-110" />
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div ref={sceneRef} className="relative order-1 md:order-2 flex items-center justify-center min-h-[300px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[600px] ml-2 lg:ml-6 mr-2 lg:mr-8">
-            <div className="w-full max-w-[400px] sm:max-w-[500px] md:max-w-[600px] lg:max-w-[700px] aspect-square relative">
-              <div className="absolute -top-2 right-0 z-10 flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.1] backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 hover:bg-white/[0.08] hover:border-[#2DD4BF]/30 hover:shadow-[0_4px_25px_rgba(45,212,191,0.15)]">
-                <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold text-white/40 tracking-wide"><span className="text-[#2DD4BF] animate-pulse">●</span> AI EMPLOYEE RUNNING</span>
-                </div>
-              </div>
-
-              <div className="absolute bottom-4 -left-2 z-10 flex items-center gap-2 px-3 py-2 rounded-lg bg-white/[0.04] border border-white/[0.1] backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 hover:bg-white/[0.08] hover:border-[#2DD4BF]/30 hover:shadow-[0_4px_25px_rgba(45,212,191,0.15)]">
-                <span className="text-[10px] sm:text-[11px] font-semibold text-white/50 tracking-wide">Sociology × Code × AI</span>
-              </div>
-
-              {sceneInView && (
-                <ErrorBoundary>
-                  <AstronautScene mouse={mouseRef.current} />
-                </ErrorBoundary>
+      {/* Desktop social rail — side floating */}
+      <motion.div
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0, x: -20 },
+          visible: {
+            opacity: 1,
+            x: 0,
+            transition: { delay: 0.9, staggerChildren: 0.06, when: 'beforeChildren' },
+          },
+        }}
+        className="fixed left-3 xl:left-6 top-1/2 -translate-y-1/2 z-30 hidden lg:flex flex-col items-center gap-3"
+      >
+        <div className="w-[3px] h-8 bg-gradient-to-b from-transparent via-white/30 to-transparent" />
+        {socialLinks.map(({ href, icon: Icon, label }) => (
+          <motion.div
+            key={label}
+            variants={{
+              hidden: { opacity: 0, x: -10 },
+              visible: { opacity: 1, x: 0 },
+            }}
+            className="relative"
+          >
+            <motion.a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onMouseEnter={() => setHoveredSocial(label)}
+              onMouseLeave={() => setHoveredSocial(null)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center justify-center w-11 h-11 rounded-lg text-[var(--text-muted)] hover:text-accent hover:bg-accent-subtle hover:shadow-[0_0_20px_rgba(148,99,194,0.15)] transition-colors duration-300"
+            >
+              {Icon ? (
+                <Icon className="w-[22px] h-[22px]" />
+              ) : (
+                <svg viewBox="0 0 24 24" className="w-[22px] h-[22px]" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
               )}
+            </motion.a>
+            <div
+              className={`absolute left-12 top-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-lg border border-white/[0.06] bg-surface-overlay/90 backdrop-blur-xl whitespace-nowrap transition-all duration-200 pointer-events-none ${
+                hoveredSocial === label
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 -translate-x-1'
+              }`}
+            >
+              <span className="text-[11px] font-medium text-white/70">{label}</span>
             </div>
+          </motion.div>
+        ))}
+        <div className="w-[3px] h-8 bg-gradient-to-b from-transparent via-white/30 to-transparent" />
+      </motion.div>
+
+      {/* Main content */}
+      <div className="relative z-10 h-full max-w-content-wide mx-auto px-4 sm:px-6 md:px-12 lg:px-20 xl:px-24">
+        <div className="flex flex-col justify-center h-full py-8 lg:pt-20 lg:pb-8">
+          <div className="space-y-5 max-w-2xl">
+            <motion.div
+              initial={{ opacity: 0, y: prefersReduced ? 0 : 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
+            >
+              <span className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-accent/20 bg-accent-subtle transition-all duration-300 hover:border-accent/40 hover:shadow-[0_0_24px_rgba(148,99,194,0.15)]">
+                <span className="relative w-2 h-2">
+                  <span className="absolute inset-0 rounded-full bg-accent/80" />
+                  <span className="absolute inset-0 rounded-full bg-accent/40 animate-ping" style={{ animationDuration: '2s' }} />
+                </span>
+                <span className="text-xs font-semibold tracking-wide text-accent/80">Open to Intern & Remote Roles</span>
+              </span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: prefersReduced ? 0 : 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="space-y-1"
+            >
+              <p className="text-base sm:text-lg text-[var(--text-muted)] font-medium tracking-wide">
+                Hi, I&apos;m
+              </p>
+              <h1 className="text-[clamp(2rem,6vw,5rem)] font-extrabold text-white leading-[1.05] tracking-[-0.04em]">
+                EMAN IQBAL
+              </h1>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: prefersReduced ? 0 : 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.2 }}
+            >
+              <p className="text-[clamp(1.125rem,2.5vw,2.25rem)] font-bold text-[var(--text-primary)]">
+                Full-Stack Developer{' '}
+                <span className="text-[var(--text-muted)] font-light">&amp;</span>{' '}
+                <span className="text-accent">Agentic AI</span>{' '}
+                <span className="text-[var(--text-primary)]">Developer</span>
+              </p>
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0, y: prefersReduced ? 0 : 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.25 }}
+              className="text-lg sm:text-xl text-white/90 leading-relaxed max-w-xl"
+            >
+              Building <span className="text-accent font-semibold">autonomous AI systems</span> and scalable web applications from agent workflows to fullstack applications.
+            </motion.p>
+
+            {/* Tech pills */}
+            <motion.div
+              initial={{ opacity: 0, y: prefersReduced ? 0 : 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.3 }}
+              className="flex flex-wrap gap-2.5"
+            >
+              {['Next.js','FastAPI','OpenAI Agents SDK','MCP','RAG'].map((tech, i) => (
+                <motion.span
+                  key={tech}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.25, delay: 0.35 + i * 0.05 }}
+                  className="px-3.5 py-1.5 text-[12px] font-semibold tracking-wide rounded-lg border border-accent/20 bg-accent-subtle text-accent/90 hover:text-accent hover:border-accent/40 hover:bg-accent-soft hover:shadow-[0_0_20px_rgba(148,99,194,0.15)] transition-all duration-300 cursor-default"
+                >
+                  {tech}
+                </motion.span>
+              ))}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: prefersReduced ? 0 : 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: 0.4 }}
+              className="flex flex-wrap items-center gap-4 pt-2"
+            >
+              <motion.a
+                href="#work"
+                whileHover={{ y: -2, scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-3 px-8 py-4 rounded-xl text-base sm:text-lg font-bold text-white tracking-wide transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent group"
+                style={{
+                  background: 'linear-gradient(135deg, #9463c2 0%, #6a3d9a 100%)',
+                  boxShadow: '0 8px 32px rgba(148,99,194,0.35), 0 0 60px rgba(148,99,194,0.1)',
+                }}
+              >
+                Explore My Work
+                <ArrowUpRight className="w-[22px] h-[22px] transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </motion.a>
+              <motion.a
+                href="/cv.pdf" target="_blank" rel="noopener noreferrer"
+                whileHover={{ y: -1, scale: 1.01 }}
+                whileTap={{ scale: 0.97 }}
+                className="inline-flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-base sm:text-lg font-semibold text-white/80 hover:text-white transition-colors duration-300 group border border-accent/40 bg-accent-subtle hover:border-accent/70 hover:bg-accent-soft"
+              >
+                <Download className="w-[20px] h-[20px] transition-transform duration-300 group-hover:translate-y-0.5" />
+                Resume
+              </motion.a>
+            </motion.div>
           </div>
 
+          {/* Mobile social */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.0 }}
+            className="flex items-center gap-5 pt-8 lg:hidden"
+          >
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--text-muted)]">Social</span>
+            <div className="w-8 h-px bg-white/10" />
+            {socialLinks.map(({ href, icon: Icon, label }) => (
+              <motion.a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={label}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center justify-center w-11 h-11 rounded-lg text-[var(--text-muted)] hover:text-white/80 hover:bg-white/[0.06] hover:scale-105 transition-colors duration-300"
+                aria-label={label}
+              >
+            {Icon ? <Icon className="w-[22px] h-[22px]" /> : (
+              <svg viewBox="0 0 24 24" className="w-[22px] h-[22px]" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                )}
+              </motion.a>
+            ))}
+          </motion.div>
         </div>
       </div>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 animate-bounce">
-        <span className="text-[8px] font-bold tracking-[0.2em] text-white/30 uppercase">Scroll</span>
-        <ChevronDown className="w-4 h-4 text-[#2DD4BF]/50" />
-      </div>
+      {/* Scroll indicator */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 0.6 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 hidden lg:flex flex-col items-center gap-3"
+      >
+        <motion.div
+          animate={{ y: [0, 6, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="flex flex-col items-center gap-1.5"
+        >
+          <span className="w-[1.5px] h-6 bg-gradient-to-b from-white/40 to-transparent rounded-full" />
+          <span className="w-3 h-3 rotate-45 border-r-[1.5px] border-b-[1.5px] border-white/30" />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

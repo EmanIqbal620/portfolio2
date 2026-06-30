@@ -1,55 +1,43 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Portfolio Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Premium First
+Every pixel must feel intentional. This portfolio competes with top 1% of developer portfolios — not templates, not bootcamp projects. Dark theme, purple accent (#9463c2), Geist font, 60fps animations.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Content-Driven Hierarchy
+Work speaks louder than effects. Every 3D scene, animation, and interaction must serve the content — never distract from it. The work section is the most important part of the page.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Performance is UX
+Sub-2s LCP, 95+ Lighthouse, no layout shifts. Heavy features (3D, chatbot) are dynamic imports. Font displays immediately via `font-display: swap`.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Mobile is First View
+70%+ of recruiters will first view on mobile. Touch targets ≥44px, no hover-only interactions, single-column layout on small screens.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Color Restraint
+ONE accent color. Opacity creates hierarchy, not additional hues. Three surface levels maximum (base, raised, overlay).
 
-### [PRINCIPLE_6_NAME]
+### VI. Accessibility
+Reduced motion respected. Focus rings visible on all interactive elements. Alt text on every image. Semantic HTML structure.
 
+### VII. Storytelling Over Listing
+Every project follows: PROBLEM → APPROACH → RESULT with numbers. A recruiter must understand the impact in 10 seconds.
 
-[PRINCIPLE__DESCRIPTION]
+## Technology Stack
+- Next.js 14 (App Router) + TypeScript
+- Tailwind CSS for styling
+- Framer Motion for animation
+- Three.js / @react-three/fiber for 3D
+- Lucide React for icons
+- Geist font (local via next/font)
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
-
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Practices
+- TypeScript strict mode
+- Dynamic imports for heavy components
+- No `useEffect` for animations (Framer Motion handles it)
+- Section IDs must match nav items for scroll spy
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+This constitution supersedes ad-hoc design decisions. All new components must follow the spacing rhythm, color palette, and typography scale defined here. Amendments require documenting the rationale.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-06-29 | **Last Amended**: 2026-06-29

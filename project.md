@@ -1,60 +1,59 @@
- 
+Here — same content, half the words.
 
- https://blog-web-kappa-lime.vercel.app/
- https://e-website-ac7a.vercel.app/   e commerce website 
- https://tulip-e-commerce-web-42fy.vercel.app/ 
+---
 
-  for streamlit https://share.streamlit.io/
- add this npm packages link https://www.npmjs.com/~eman_iqbal
+**CRM Digital FTE Factory**
+*GIAIC Hackathon 5 — Advanced*
 
+AI agent handling Gmail, WhatsApp, and CRM autonomously — Kafka for real-time event handling instead of polling.
 
- 📖  HUMANOID ROBOTICS TEXTBOOK
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🏆 GIAIC HACKATHON 1 
-6 MODULES • 24+ WEEKS • LIVE AI TUTOR
+`OpenAI Agents SDK` `Kafka` `Docker` `MCP`
+[Live demo →]
 
-PROBLEM   Robotics education is expensive,
-          scattered and paywalled.
+---
 
-BUILT     Free textbook with 6 modules and
-          a live RAG AI Tutor built in.
+**Personal AI Employee (Digital FTE)**
+*GIAIC Hackathon 0 — Advanced*
 
-RESULT    Deployed free. Anyone can access
-          and learn right now.
+Self-running agent on Claude Code + MCP servers, triggered by file watchers. Obsidian dashboard shows what it decided, no log digging.
 
-Docusaurus • RAG • Qdrant • FastAPI
+`Claude Code` `MCP servers` `Python watchers` `Obsidian`
+[GitHub →]
 
-[ READ BOOK ]  [ AI TUTOR ]  [ GITHUB ]
+---
 
-https://ai-native-book-ruddy.vercel.app this is live demo ok of ai put it 
+**Humanoid Robotics Book + RAG AI Tutor**
+*GIAIC Hackathon 1*
 
-   AI CHAT — CHAINLIT + GEMINI
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DEPLOYED ON HUGGING FACE ✦
+Free 6-module robotics textbook with a RAG tutor embedded — answers grounded in the book content. Qdrant for semantic search, not keyword lookup.
 
-Built a full AI chat interface with
-Gemini API backend and real-time
-streaming  deployed to production.
+`Docusaurus` `RAG` `Qdrant` `FastAPI` `Neon Postgres`
+[Live demo →] [GitHub →] [Architecture →]
 
-Chainlit  •  Python  •  Gemini API
+---
 
-[ TRY IT LIVE →  link is https://emaniqbal-chainlit1.hf.space]     [ GITHUB https://github.com/EmanIqbal620/tobo-app-chatbot.git ]
+**TodoFlow AI Task Manager**
+*GIAIC Hackathon 3*
 
+Todo app with an AI chatbot that helps prioritize, not just store tasks. Full auth + analytics, live on Vercel.
 
+`Next.js` `FastAPI` `Better Auth` `JWT` `Neon Postgres`
+[Live demo →] [GitHub →] [Architecture →]
 
+---
 
-  TODOFLOW  AI TASK MANAGER
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🏆 GIAIC HACKATHON 3 
+**AI Chat — Chainlit + Gemini**
 
-PROBLEM   Todo apps store tasks but never
-          help you think or prioritize.
+Real-time streaming chat backed by the Gemini API, live on Hugging Face.
 
-BUILT     Full app with auth, analytics,
-          AI chatbot  built in 3 phases.
+`Chainlit` `Python` `Gemini API`
+[Live demo →] [GitHub →]
 
-RESULT    Live on Vercel. Works right now.
+---
 
-Next.js • FastAPI • Better Auth • Docker
+**Tulip Flower Shop**
 
-[ LIVE DEMO https://tobo-app-chatbot.vercel.app ]  [ GITHUB ]  [ ARCHITECTURE ]
+E-commerce build — cart, reviews, discount pricing, 12+ products — deployed on Vercel.
+
+`Next.js` `Tailwind CSS` `Vercel`
+[Live demo →] [GitHub →]

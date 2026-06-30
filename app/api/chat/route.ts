@@ -6,13 +6,22 @@ export async function POST(req: Request) {
       return new Response(JSON.stringify({ error: 'messages required' }), { status: 400 });
     }
 
-    const lastMsg = messages[messages.length - 1];
+    const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+    if (!lastUserMsg) {
+      return new Response(JSON.stringify({ error: 'no user message found' }), { status: 400 });
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
 
     const res = await fetch('https://emaniqbal-portfolio.hf.space/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: lastMsg.content }),
+      signal: controller.signal,
+      body: JSON.stringify({ question: lastUserMsg.content }),
     });
+
+    clearTimeout(timeout);
 
     if (!res.ok) {
       const text = await res.text();

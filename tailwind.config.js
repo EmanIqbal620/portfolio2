@@ -8,11 +8,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
-        'accent-magenta': 'var(--accent-magenta)',
-        'accent-teal': 'var(--accent-teal)',
-        'accent-purple': 'var(--accent-purple)',
+        background: '#000000',
+        foreground: '#ffffff',
+        accent: '#9463c2',
+        'accent-soft': 'rgba(148, 99, 194, 0.15)',
+        'accent-subtle': 'rgba(148, 99, 194, 0.06)',
+        surface: {
+          base: '#000000',
+          raised: '#08080c',
+          overlay: '#0f0f16',
+        },
+      },
+      fontFamily: {
+        sans: ['var(--font-geist-sans)', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['var(--font-geist-mono)', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+      },
+      fontSize: {
+        'caption': ['0.75rem', { lineHeight: '1rem' }],
+        'body-sm': ['0.8125rem', { lineHeight: '1.25rem' }],
+        'body': ['0.9375rem', { lineHeight: '1.5rem' }],
+        'lead': ['1.0625rem', { lineHeight: '1.625rem' }],
+      },
+      maxWidth: {
+        content: '1200px',
+        'content-wide': '1400px',
       },
     },
   },

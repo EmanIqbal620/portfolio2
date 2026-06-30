@@ -1,252 +1,160 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
-import { motion, useInView, useAnimation } from 'framer-motion';
-import { Sparkles, ArrowRight, ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { GraduationCap, Award, MapPin, Sparkles, ArrowRight } from 'lucide-react';
 
 function CredentialCard({
-  card,
-  index,
+  icon: Icon,
+  title,
+  subtitle,
+  detail,
 }: {
-  card: (typeof credentialCards)[0];
-  index: number;
+  icon: React.ElementType;
+  title: string;
+  subtitle: string;
+  detail: string;
 }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-40px' });
-  const controls = useAnimation();
-
-  useEffect(() => {
-    if (isInView) controls.start('visible');
-  }, [isInView, controls]);
-
   return (
     <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={controls}
-      variants={{
-        hidden: { opacity: 0, y: 30 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: {
-            duration: 0.5,
-            delay: index * 0.08,
-            ease: [0.25, 0.46, 0.45, 0.94],
-          },
-        },
-      }}
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-      className="group relative overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.03] p-4 sm:p-5 will-change-transform"
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = `0 0 8px 2px ${card.accent}18, 0 24px 60px ${card.accent}15, 0 0 60px ${card.accent}08`;
-        e.currentTarget.style.borderColor = `${card.accent}40`;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)';
-      }}
-    >
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse at 50% 0%, ${card.accent}18, transparent 70%)`,
-        }}
-      />
+      whileHover={{ y: -4 }}
+      className="relative p-4 sm:p-5 rounded-xl border border-white/[0.12] bg-white/[0.07] transition-all duration-300 hover:border-accent/40 hover:bg-white/[0.10] hover:shadow-[0_16px_48px_rgba(148,99,194,0.15)] group overflow-hidden">
+      <div className="absolute left-0 top-3 bottom-3 w-[2px] rounded-full bg-gradient-to-b from-accent/70 via-accent/20 to-transparent shadow-[0_0_0px_transparent] transition-all duration-300 group-hover:w-[3px] group-hover:from-accent/80 group-hover:via-accent/30 group-hover:shadow-[0_0_12px_rgba(148,99,194,0.2)]" />
       <div className="relative z-10 flex items-start gap-3 sm:gap-4">
-        <motion.div
-          className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center"
-          style={{
-            backgroundColor: `${card.accent}12`,
-            color: card.accent,
-          }}
-          whileHover={{ rotate: [0, -5, 5, 0], scale: 1.15 }}
-          transition={{ duration: 0.3 }}
-        >
-          <span className="text-[10px] font-black tracking-tight">EI</span>
-        </motion.div>
+        <div className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center text-accent/70">
+          <Icon className="w-5 h-5" strokeWidth={1.5} />
+        </div>
         <div className="min-w-0 flex-1">
-          <h3 className="text-xs sm:text-sm font-bold tracking-wide uppercase text-white/70 group-hover:text-white transition-colors duration-200"
-            style={{}}
-          >
-            {card.title}
-          </h3>
-          <p className="text-sm sm:text-base font-semibold text-white mt-0.5 leading-tight">
-            {card.subtitle}
-          </p>
-          <p className="text-xs sm:text-sm text-white/50 group-hover:text-white/65 mt-1 leading-relaxed transition-colors duration-200">
-            {card.detail}
-          </p>
+          <p className="text-[11px] font-bold tracking-[0.15em] uppercase text-[var(--text-muted)] mb-1.5">{title}</p>
+          <p className="text-[15px] font-semibold text-white leading-snug">{subtitle}</p>
+          <p className="text-[14px] text-[var(--text-body)] mt-1 leading-relaxed">{detail}</p>
         </div>
       </div>
     </motion.div>
   );
 }
 
-const credentialCards = [
-  {
-    title: 'Education',
-    subtitle: 'Sociology student',
-    detail: 'University of Karachi',
-    accent: '#D946EF',
-  },
-  {
-    title: 'Certified',
-    subtitle: 'GIAIC',
-    detail: "Governor's Initiative for AI & Computing",
-    accent: '#2DD4BF',
-  },
-  {
-    title: 'Location',
-    subtitle: 'Karachi, Pakistan',
-    detail: 'Open to remote opportunities worldwide',
-    accent: '#A855F7',
-  },
-  {
-    title: 'AI Employees',
-    subtitle: '2 running live',
-    detail: 'Autonomous 24/7 — Gmail, WhatsApp, CRM',
-    accent: '#D946EF',
-  },
-  {
-    title: 'AI Engineering',
-    subtitle: 'Agentic workflows',
-    detail: 'OpenAI Agents SDK, RAG, MCP in production',
-    accent: '#2DD4BF',
-  },
-  {
-    title: 'Fullstack',
-    subtitle: 'Scalable Architecture',
-    detail: 'Next.js, FastAPI, Docker — modular systems built to scale',
-    accent: '#A855F7',
-  },
+const credentials = [
+  { icon: GraduationCap, title: 'Education', subtitle: 'Sociology Student', detail: 'University of Karachi' },
+  { icon: Award, title: 'Certification', subtitle: 'GIAIC Certified', detail: "Governor's Initiative for AI & Computing" },
+  { icon: MapPin, title: 'Location', subtitle: 'Karachi, Pakistan', detail: 'Open to entry-level roles' },
 ];
 
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06, delayChildren: 0 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
+};
+
+const itemRightVariants = {
+  hidden: { opacity: 0, x: 20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] },
+  },
+};
+
 export function AboutSection() {
-  const sectionRef = useRef(null);
-  const isInView = useInView(sectionRef, { once: true, margin: '-50px' });
-  const controls = useAnimation();
-
-  useEffect(() => {
-    if (isInView) controls.start('visible');
-  }, [isInView, controls]);
-
   return (
-    <section
-      id="about"
-      ref={sectionRef}
-      className="relative py-16 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20 xl:px-24 overflow-hidden"
-    >
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/3 -left-20 w-72 h-72 bg-accent-magenta/[0.03] rounded-full blur-[100px]" />
-        <div className="absolute bottom-1/3 -right-20 w-72 h-72 bg-accent-teal/[0.03] rounded-full blur-[100px]" />
+    <section id="about" className="section-alt relative py-20 md:py-28">
+      <div className="absolute top-0 left-[5%] right-[5%] h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-[#08080c] z-20 pointer-events-none" />
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full opacity-20"
+          style={{
+            background: 'radial-gradient(circle at 40% 50%, rgba(148,99,194,0.08), transparent 60%)',
+          }}
+        />
       </div>
 
-      <div className="max-w-[1400px] mx-auto relative z-10">
+      <div className="max-w-content-wide mx-auto w-full px-4 sm:px-6 md:px-12 lg:px-20 xl:px-24 relative z-10">
         <motion.div
-          className="mb-6 md:mb-8"
-          initial={{ opacity: 0, y: 30 }}
-          animate={controls}
-          variants={{
-            visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-          }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '300px 0px' }}
+          variants={containerVariants}
         >
-          <motion.span
-            className="text-base sm:text-lg font-bold tracking-[0.3em] uppercase text-accent-magenta/70"
-            initial={{ opacity: 0, x: -20 }}
-            animate={controls}
-            variants={{ visible: { opacity: 1, x: 0, transition: { delay: 0.1 } } }}
-          >
-            About Me
-          </motion.span>
-        </motion.div>
+          <div className="max-w-3xl ml-auto mr-0 md:mr-12 lg:mr-20 pl-4 md:pl-8">
+            <div className="space-y-5">
+              <motion.div variants={itemVariants} className="flex items-center gap-3">
+                <span className="w-6 h-px bg-accent/50" />
+                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-accent/70">About Me</span>
+              </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 xl:gap-16">
-          <div className="lg:col-span-2 space-y-5">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={controls}
-              variants={{
-                visible: { opacity: 1, y: 0, transition: { delay: 0.2, duration: 0.5 } },
-              }}
-            >
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white leading-tight">
-                <span className="gradient-text">Eman Iqbal</span>
-              </h2>
-              <p className="text-base sm:text-lg text-white/80 font-semibold mt-1">
-                AI Engineer & Fullstack Developer
-                <span className="text-accent-teal/60 font-normal ml-1">— Karachi, Pakistan</span>
-              </p>
-            </motion.div>
+              <motion.div variants={itemVariants}>
+                <h2 className="section-title">EMAN IQBAL</h2>
+              </motion.div>
 
-            <motion.div
-              className="space-y-3"
-              initial={{ opacity: 0, y: 20 }}
-              animate={controls}
-              variants={{
-                visible: { opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.5 } },
-              }}
-            >
-              <p className="text-sm sm:text-base text-white/60 leading-relaxed">
-                With a background in Sociology, I understand how people interact
-                with systems and make decisions.
-              </p>
-              <p className="text-sm sm:text-base text-white/60 leading-relaxed">
-                I build scalable, AI-powered solutions designed around real user
-                behavior.
-              </p>
-              <p className="text-sm sm:text-base text-white/70 leading-relaxed font-medium">
-                That combination is rare — and it shows in every system I ship.
-              </p>
-            </motion.div>
+              <motion.div variants={itemVariants}>
+                <p className="text-lead sm:text-[1.125rem] text-[var(--text-primary)] font-medium">
+                  Agentic AI Developer & Full-Stack Engineer
+                  <span className="text-[var(--text-body)] font-normal ml-2">— Karachi, Pakistan</span>
+                </p>
+              </motion.div>
 
-            <motion.div
-              className="flex flex-wrap gap-3 pt-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={controls}
-              variants={{
-                visible: { opacity: 1, y: 0, transition: { delay: 0.4, duration: 0.5 } },
-              }}
-            >
-              <motion.a
-                href="#contact"
-                className="btn-cta inline-flex"
-                whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(45,212,191,0.3)' }}
-                whileTap={{ scale: 0.98 }}
-                animate={{
-                  boxShadow: [
-                    '0 0 0px rgba(45,212,191,0)',
-                    '0 0 20px rgba(45,212,191,0.15)',
-                    '0 0 0px rgba(45,212,191,0)',
-                  ],
-                }}
-                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Let&apos;s Talk</span>
-                <ArrowRight className="w-4 h-4 transition-all duration-300 group-hover:translate-x-1" />
-              </motion.a>
-              <motion.a
-                href="mailto:emaniqbal907@gmail.com"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-white/10 text-xs sm:text-sm font-semibold text-white/50 hover:text-white hover:border-white/20 hover:bg-white/[0.03] transition-all"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-                <span>emaniqbal907@gmail.com</span>
-              </motion.a>
-            </motion.div>
-          </div>
+              <motion.div variants={itemVariants} className="space-y-3 max-w-2xl">
+                <p className="text-body sm:text-lead text-[var(--text-primary)] leading-[1.75]">
+                  I build autonomous AI systems and production-ready fullstack apps — multi-agent workflows, RAG pipelines, and scalable products shipped with Next.js, FastAPI, and Docker.
+                </p>
+                <p className="text-body sm:text-lead text-[var(--text-primary)] leading-[1.75]">
+                  I work across the stack: designing agentic backends with OpenAI Agents SDK and MCP, containerizing and deploying with Docker, and managing data with PostgreSQL.
+                </p>
+              </motion.div>
 
-          <div className="lg:col-span-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              {credentialCards.map((card, index) => (
-                <CredentialCard key={card.title} card={card} index={index} />
-              ))}
+              <motion.div variants={itemRightVariants} className="flex flex-wrap gap-3">
+                <motion.a
+                  href="#contact"
+                  whileHover={{ y: -2, scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl bg-accent text-sm font-bold text-white tracking-wide shadow-[0_4px_20px_rgba(148,99,194,0.25)] hover:shadow-[0_12px_40px_rgba(148,99,194,0.3)] hover:bg-accent/90 transition-all duration-300"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  {"Let's Talk"}
+                  <ArrowRight className="w-4 h-4" />
+                </motion.a>
+                <motion.a
+                  href="/cv.pdf"
+                  download
+                  whileHover={{ y: -2, scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/15 bg-white/[0.03] text-sm font-semibold text-[var(--text-body)] hover:text-white hover:border-accent/30 hover:bg-accent-subtle transition-all duration-300"
+                >
+                  Download CV
+                </motion.a>
+                <motion.a
+                  href="mailto:emaniqbal907@gmail.com"
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-white/15 bg-white/[0.03] text-sm font-semibold text-[var(--text-body)] hover:text-white hover:border-accent/30 hover:bg-accent-subtle transition-all duration-300"
+                >
+                  emaniqbal907@gmail.com
+                </motion.a>
+              </motion.div>
+
+              <motion.div variants={itemRightVariants} className="flex items-center gap-3">
+                <span className="w-6 h-px bg-accent/30" />
+                <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--text-muted)]">Credentials</span>
+              </motion.div>
+
+              <motion.div variants={itemRightVariants} className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+                {credentials.map((cred) => (
+                  <CredentialCard key={cred.title} {...cred} />
+                ))}
+              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
