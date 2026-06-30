@@ -2,12 +2,6 @@
 
 import { useRef, useEffect } from 'react';
 
-const ORB_RADIUS = 42;
-const ORB_DIAMETER = ORB_RADIUS * 2;
-const ORB_GAP = 14;
-const CANVAS_PAD = 24;
-const LABEL_WIDTH = 140;
-const REPULSION_RADIUS = 130;
 const STIFFNESS = 0.09;
 const DAMPING = 0.76;
 const TINT_LERP = 0.13;
@@ -25,36 +19,62 @@ const groups = [
 
 type Orb = { ox: number; oy: number; x: number; y: number; vx: number; vy: number; color: string; name: string; tint: number; gi: number; phase: number };
 type Layout = { startX: number; cy: number; w: number; h: number };
+type Sizes = {
+  orbR: number; orbG: number; labW: number; pad: number;
+  repR: number; rowG: number; rPadY: number; rStartY: number;
+  font: string; labFont: string;
+};
+
+function getSizes(w: number): Sizes {
+  if (w < 480) return {
+    orbR: 22, orbG: 5, labW: 65, pad: 8, repR: 70,
+    rowG: 6, rPadY: 8, rStartY: 16,
+    font: '700 9px Geist, system-ui, -apple-system, sans-serif',
+    labFont: '700 9px Geist, system-ui, -apple-system, sans-serif',
+  };
+  if (w < 640) return {
+    orbR: 28, orbG: 7, labW: 80, pad: 12, repR: 90,
+    rowG: 8, rPadY: 10, rStartY: 20,
+    font: '700 10px Geist, system-ui, -apple-system, sans-serif',
+    labFont: '700 10px Geist, system-ui, -apple-system, sans-serif',
+  };
+  if (w < 900) return {
+    orbR: 36, orbG: 10, labW: 110, pad: 18, repR: 120,
+    rowG: 10, rPadY: 14, rStartY: 28,
+    font: '700 12px Geist, system-ui, -apple-system, sans-serif',
+    labFont: '700 12px Geist, system-ui, -apple-system, sans-serif',
+  };
+  return {
+    orbR: 42, orbG: 14, labW: 140, pad: 24, repR: 130,
+    rowG: 10, rPadY: 14, rStartY: 28,
+    font: '700 13px Geist, system-ui, -apple-system, sans-serif',
+    labFont: '700 12px Geist, system-ui, -apple-system, sans-serif',
+  };
+}
 
 function hexToRgb(hex: string) {
   const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return m ? { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) } : { r: 255, g: 255, b: 255 };
 }
 
-const ROW_GAP = 10;
-const ROW_PAD_Y = 14;
-const ROW_START_Y = 28;
-
-function getLayouts(canvasW: number): Layout[] {
-  const startX = CANVAS_PAD + LABEL_WIDTH;
-  const availW = canvasW - startX - CANVAS_PAD;
+function getLayouts(s: Sizes, canvasW: number): Layout[] {
+  const startX = s.pad + s.labW;
   const layouts: Layout[] = [];
-
   for (let i = 0; i < groups.length; i++) {
-    const rowH = ORB_DIAMETER + ROW_PAD_Y * 2;
-    const cy = ROW_START_Y + i * (rowH + ROW_GAP);
-    layouts.push({ startX, cy, w: availW, h: rowH });
+    const rowH = s.orbR * 2 + s.rPadY * 2;
+    const cy = s.rStartY + i * (rowH + s.rowG);
+    layouts.push({ startX, cy, w: canvasW - startX - s.pad, h: rowH });
   }
   return layouts;
 }
 
-function makeOrbs(layouts: Layout[]): Orb[] {
+function makeOrbs(s: Sizes, layouts: Layout[]): Orb[] {
   const result: Orb[] = [];
   for (let gi = 0; gi < groups.length; gi++) {
     const g = groups[gi];
     const l = layouts[gi];
     for (let ti = 0; ti < g.techs.length; ti++) {
-      const x = l.startX + ti * (ORB_DIAMETER + ORB_GAP) + ORB_RADIUS;
+      const x = l.startX + ti * (s.orbR * 2 + s.orbG) + s.orbR;
       const y = l.cy;
       result.push({ ox: x, oy: y, x, y, vx: 0, vy: 0, color: g.color, name: g.techs[ti], tint: 0, gi, phase: Math.random() * Math.PI * 2 });
     }
@@ -62,10 +82,10 @@ function makeOrbs(layouts: Layout[]): Orb[] {
   return result;
 }
 
-function getCanvasHeight(layouts: Layout[]): number {
+function getCanvasHeight(s: Sizes, layouts: Layout[]): number {
   if (layouts.length === 0) return 100;
   const last = layouts[layouts.length - 1];
-  return last.cy + last.h / 2 + CANVAS_PAD;
+  return last.cy + last.h / 2 + s.pad;
 }
 
 function drawFocusGlow(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, tint: number) {
@@ -82,7 +102,7 @@ function drawFocusGlow(ctx: CanvasRenderingContext2D, x: number, y: number, r: n
   ctx.restore();
 }
 
-function drawOrb(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, name: string, tint: number, phase: number, time: number) {
+function drawOrb(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, color: string, name: string, tint: number, phase: number, time: number, font: string) {
   const rgb = hexToRgb(color);
   const pulse = 0.075 + Math.sin(phase + time * 0.35) * 0.025;
   const hoverR = r * (1 + tint * 0.06);
@@ -119,9 +139,9 @@ function drawOrb(ctx: CanvasRenderingContext2D, x: number, y: number, r: number,
   gl.addColorStop(0.65, color);
   gl.addColorStop(0.88, `rgb(${Math.max(0, rgb.r - 55)},${Math.max(0, rgb.g - 55)},${Math.max(0, rgb.b - 55)})`);
   gl.addColorStop(1, `rgb(${Math.max(0, rgb.r - 85)},${Math.max(0, rgb.g - 85)},${Math.max(0, rgb.b - 85)})`);
+  ctx.fillStyle = gl;
   ctx.beginPath();
   ctx.arc(x, y, hoverR, 0, Math.PI * 2);
-  ctx.fillStyle = gl;
   ctx.fill();
   ctx.restore();
 
@@ -196,7 +216,7 @@ function drawOrb(ctx: CanvasRenderingContext2D, x: number, y: number, r: number,
   ctx.restore();
 
   ctx.save();
-  ctx.font = '700 13px Geist, system-ui, -apple-system, sans-serif';
+  ctx.font = font;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = '#fff';
@@ -204,7 +224,7 @@ function drawOrb(ctx: CanvasRenderingContext2D, x: number, y: number, r: number,
   ctx.restore();
 }
 
-function drawConnectingLine(ctx: CanvasRenderingContext2D, l: Layout, color: string, orbs: Orb[], gi: number) {
+function drawConnectingLine(ctx: CanvasRenderingContext2D, l: Layout, color: string, orbs: Orb[], gi: number, orbR: number) {
   const rowOrbs = orbs.filter(o => o.gi === gi);
   if (rowOrbs.length < 2) return;
   const x1 = rowOrbs[0].ox;
@@ -220,15 +240,15 @@ function drawConnectingLine(ctx: CanvasRenderingContext2D, l: Layout, color: str
   ctx.shadowColor = color + '30';
   ctx.shadowBlur = 4;
   ctx.beginPath();
-  ctx.moveTo(x1 - ORB_RADIUS, l.cy);
-  ctx.lineTo(x2 + ORB_RADIUS, l.cy);
+  ctx.moveTo(x1 - orbR, l.cy);
+  ctx.lineTo(x2 + orbR, l.cy);
   ctx.stroke();
   ctx.restore();
 }
 
-function drawVLine(ctx: CanvasRenderingContext2D, layouts: Layout[]) {
+function drawVLine(ctx: CanvasRenderingContext2D, layouts: Layout[], pad: number) {
   if (layouts.length < 2) return;
-  const lx = CANVAS_PAD + 11;
+  const lx = pad + 11;
   ctx.save();
   ctx.strokeStyle = 'rgba(255,255,255,0.1)';
   ctx.lineWidth = 1;
@@ -240,22 +260,23 @@ function drawVLine(ctx: CanvasRenderingContext2D, layouts: Layout[]) {
   ctx.restore();
 }
 
-function drawLabel(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, color: string) {
-  const lx = x + 11;
+function drawLabel(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, color: string, s: Sizes) {
+  const lx = x + (s.labW < 90 ? 6 : 11);
   ctx.save();
   ctx.fillStyle = color;
+  const dotR = s.labW < 90 ? 2 : 3;
   ctx.beginPath();
-  ctx.arc(lx, y, 3, 0, Math.PI * 2);
+  ctx.arc(lx, y, dotR, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = color + '30';
   ctx.beginPath();
-  ctx.arc(lx, y, 6, 0, Math.PI * 2);
+  ctx.arc(lx, y, dotR * 2, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = color;
-  ctx.font = '700 12px Geist, system-ui, -apple-system, sans-serif';
+  ctx.font = s.labFont;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillText(text.toUpperCase(), x + 28, y);
+  ctx.fillText(text.toUpperCase(), x + (s.labW < 90 ? 14 : 28), y);
   ctx.restore();
 }
 
@@ -279,13 +300,16 @@ export function TechStackOrbs() {
     let w = 0;
     let h = 0;
 
+    let s: Sizes = getSizes(container.clientWidth);
+
     const resize = () => {
       w = container.clientWidth;
       if (w === 0) return;
       const dpr = window.devicePixelRatio || 1;
-      layouts = getLayouts(w);
-      orbs = makeOrbs(layouts);
-      h = getCanvasHeight(layouts);
+      s = getSizes(w);
+      layouts = getLayouts(s, w);
+      orbs = makeOrbs(s, layouts);
+      h = getCanvasHeight(s, layouts);
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
@@ -351,17 +375,18 @@ export function TechStackOrbs() {
 
       if (mouse.x > 0 && mouse.x < w && mouse.y > 0 && mouse.y < h) {
         ctx.save();
-        const rGrad = ctx.createRadialGradient(mouse.x, mouse.y, 4, mouse.x, mouse.y, 28);
+        const cr = Math.min(28, s.orbR * 0.67);
+        const rGrad = ctx.createRadialGradient(mouse.x, mouse.y, 4, mouse.x, mouse.y, cr);
         rGrad.addColorStop(0, 'rgba(127,119,221,0.08)');
         rGrad.addColorStop(1, 'rgba(127,119,221,0)');
         ctx.fillStyle = rGrad;
         ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 28, 0, Math.PI * 2);
+        ctx.arc(mouse.x, mouse.y, cr, 0, Math.PI * 2);
         ctx.fill();
         ctx.strokeStyle = 'rgba(127,119,221,0.2)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(mouse.x, mouse.y, 12, 0, Math.PI * 2);
+        ctx.arc(mouse.x, mouse.y, cr * 0.43, 0, Math.PI * 2);
         ctx.stroke();
         ctx.fillStyle = 'rgba(255,255,255,0.5)';
         ctx.beginPath();
@@ -370,7 +395,7 @@ export function TechStackOrbs() {
         ctx.restore();
       }
 
-      drawVLine(ctx, layouts);
+      drawVLine(ctx, layouts, s.pad);
 
       for (let gi = 0; gi < groups.length; gi++) {
         const groupDelay = gi * 100;
@@ -381,8 +406,8 @@ export function TechStackOrbs() {
         if (!l) continue;
         const g = groups[gi];
         ctx.globalAlpha = ea;
-        drawConnectingLine(ctx, l, g.color, orbs, gi);
-        drawLabel(ctx, g.name.toUpperCase(), CANVAS_PAD, l.cy, g.color);
+        drawConnectingLine(ctx, l, g.color, orbs, gi, s.orbR);
+        drawLabel(ctx, g.name.toUpperCase(), s.pad, l.cy, g.color, s);
         ctx.globalAlpha = 1;
       }
 
@@ -405,8 +430,8 @@ export function TechStackOrbs() {
         const dy = orb.y - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < REPULSION_RADIUS && dist > 1) {
-          const t = 1 - (dist / REPULSION_RADIUS);
+        if (dist < s.repR && dist > 1) {
+          const t = 1 - (dist / s.repR);
           const force = t * t;
           orb.vx += (dx / dist) * force * 4;
           orb.vy += (dy / dist) * force * 4;
@@ -422,8 +447,9 @@ export function TechStackOrbs() {
         orb.x += orb.vx;
         orb.y += orb.vy;
 
-        if (orb === nearestOrb && nearestDist < 220 * 220) {
-          drawFocusGlow(ctx, orb.x, orb.y, ORB_RADIUS, orb.color, orb.tint);
+        const focusR = s.orbR * 5.2;
+        if (orb === nearestOrb && nearestDist < focusR * focusR) {
+          drawFocusGlow(ctx, orb.x, orb.y, s.orbR, orb.color, orb.tint);
         }
 
         const scale = 1 + (1 - oa) * 0.05;
@@ -432,7 +458,7 @@ export function TechStackOrbs() {
         ctx.translate(orb.x, orb.y);
         ctx.scale(scale, scale);
         ctx.translate(-orb.x, -orb.y);
-        drawOrb(ctx, orb.x, orb.y, ORB_RADIUS, orb.color, orb.name, orb.tint, orb.phase, time);
+        drawOrb(ctx, orb.x, orb.y, s.orbR, orb.color, orb.name, orb.tint, orb.phase, time, s.font);
         ctx.restore();
         ctx.globalAlpha = 1;
       }
